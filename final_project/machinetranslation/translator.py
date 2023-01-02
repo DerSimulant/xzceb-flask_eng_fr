@@ -9,17 +9,33 @@ load_dotenv()
 apikey = os.environ['apikey']
 url = os.environ['url']
 
-authenticator = IAMAuthenticator('apikey')
-language_translator = LanguageTranslatorV3(
-    version='2018-05-01'
-    authenticator=authenticator
-)
+authenticator = IAMAuthenticator(apikey)
+lt = LanguageTranslatorV3(
+    version='2018-05-01',
+    authenticator=authenticator)
 
-language_translator.set_service_url('url')
+lt.set_service_url('url')
 
-translation = language_translator.translate(
-    text='Hello, how are you today?',
-    model_id='en-es').get_result()
-print(json.dumps(translation, indent=2, ensure_ascii=False))
 
-#bisher Versionsfehler
+
+def englishToFrench(englishText):
+    '''Translates the English text in the string variable "text" to French
+    and returns the translation. To get to the translation you need to access the 
+    1st data in the JSON returned. Rest is additional data'''
+
+    frenchText = lt.translate(
+    text=englishText,
+    model_id='en-fr').get_result()
+    print(json.dumps(frenchText, indent=2, ensure_ascii=False))
+    return frenchText
+
+def frenchToEnglish(frenchText):
+    '''Translates the French text in the string variable "text" to English
+    and returns the translation. To get to the translation you need to access the 
+    1st data in the JSON returned. Rest is additional data'''
+    
+    englishText = lt.translate(
+    text=frenchText,
+    model_id='en-fr').get_result()
+    print(json.dumps(englishText, indent=2, ensure_ascii=False))
+    return englishText 
